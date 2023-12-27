@@ -51,11 +51,37 @@ class Wall:
 # Complete the pattern lines to move tiles to the wall for points
 class PatternLines:
     def __init__(self) -> None:
-        # [type, capacity, size, [list of tiles already in the wall for that row]]
+        # [type, capacity, length]
         self.pattern_line = [[-1,1,0],[-1,2,0],[-1,3,0],[-1,4,0],[-1,5,0]]
         
-    def add_tiles(self, row: int, type: int, number: int) -> None:
-        pass
+    # attempts to place <number> tiles of type <type> into the <row>
+    # Returns the number of tiles that overflowed
+    # With error return -1
+    def add_tiles(self, row: int, type: int, number: int) -> int:
+        if number <= 0:
+            # Should never triggers
+            print("Attempting to Add No Tiles to Pattern Line")
+            return -1
+        
+        if type == self.pattern_line[row][0] or self.pattern_line[row][0] == -1:
+            if self.pattern_line[row][1] <= self.pattern_line[row][2]:
+                # Already at capacity => error
+                return -1
+            else:
+                self.pattern_line[row][2] += number
+                self.pattern_line[row][0] = type
+                if self.pattern_line[row][1] < self.pattern_line[row][2]:
+                    # More tiles than can fit
+                    overflow = self.pattern_line[row][2] - self.pattern_line[row][1]
+                    self.pattern_line[row][2] = self.pattern_line[row][1]
+                    return overflow
+                else:
+                    # No over flow
+                    return 0
+        else:
+            # Different type of tile already in the line
+            return -1
+            
     
     # Check if we can place a tile in a specifics row
     def check_valid_move(self, type: int, row: int) -> bool:
@@ -67,10 +93,20 @@ class PatternLines:
         
         return True
 
-
+    # Print the each of the pattern lines
     def print_pattern_line(self) -> None:
+        color = ["Red       ", "Orange    ", "Black     ", "Blue      ", "Light-Blue"]
         for i in range(5):
             print("Pattern Line", i, end=": ")
+            filled = self.pattern_line[i][2]
+            for j in range(self.pattern_line[i][1]):
+                if filled > 0:
+                    print(color[self.pattern_line[i][0]], end=" ")
+                    filled -= 1
+                else:
+                    print("Empty     ", end=" ")
+            print()
+        print()
             
 
 # Surplus tiles are put in the floor line and count for negative points
