@@ -76,11 +76,47 @@ class PatternLines:
 # Surplus tiles are put in the floor line and count for negative points
 class FloorLine:
     def __init__(self) -> None:
-        self.floor = [[-1],[-1],[-1],[-1],[-1],[-1],[-1]]
+        self.floor = [-1, -1, -1, -1, -1, -1, -1] # -1 represents an empty space
+        self.points = [-1, -1, -2, -2, -2, -3, -3] # How many points you lose for having a tile there
         self.length = 0
         
-    def add_floor(self, tiles: list[int]) -> None:
-        pass
+    # Add a tile to the floor line (max 7)
+    def add_to_floor(self, type: int) -> bool:
+        if self.length == 7:
+            # already full
+            return False
+        
+        # find the next open spot and insert the tile
+        for i in range(7):
+            if self.floor[i] == -1:
+                # Fill empty space and return true
+                self.length += 1
+                self.floor[i] = type
+                return True
+            
+        # Should Never Reach this
+        return False
+                
+    # Caluclate the number of negative points you get from the floor line
+    def calculate_floor_points(self) -> int:
+        total = 0
+        for i in range(7):
+            if self.floor[i] != -1:
+                total += self.points[i]
+            else:
+                break
+        return total
+    
+    # Print the floor line
+    def print_floor(self) -> None:
+        color = ["Red", "Orange", "Black", "Blue", "Light-Blue", "First"]
+        print("Floor Line: ", end="")
+        for i in range(7):
+            if self.floor[i] != -1:
+                print(color[self.floor[i]], end=" ")
+            else:
+                print("Empty ", end="")
+        print("\n")
     
 class Board:
     def __init__(self, player: int) -> None:
