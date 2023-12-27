@@ -2,12 +2,17 @@
 # "Red": 0, "Orange": 1, "Black": 2, "Blue": 3, "Light Blue": 4, "First": 5
 class Wall:
     def __init__(self) -> None:
+        # initialize wall array
+        # each element represents a square on the wall
+        # [x, y] where x is the type of tile to be placed and y is 0/1 if the tile is there or not
         self.wall = [[[3, 0], [1, 0], [0, 0], [2, 0], [4, 0]],
                      [[4, 0], [3, 0], [1, 0], [0, 0], [2, 0]],
                      [[2, 0], [4, 0], [3, 0], [1, 0], [0, 0]],
                      [[0, 0], [2, 0], [4, 0], [3, 0], [1, 0]],
                      [[1, 0], [0, 0], [2, 0], [4, 0], [3, 0]]]
         
+    # Add a tile to the wall
+    # This should always be successful with correct validation
     def add_tile(self, row: int, type: int) -> bool:
         for i in range(5):
             if type == self.wall[row][i][0]:
@@ -16,6 +21,19 @@ class Wall:
         
         return False
     
+    # If the tile already exists in the wall we cannot place that tile in the pattern line
+    # Checks if the tile already exists in the row and returns False if so (putting it in the patternline is not valid)
+    def check_valid_move(self, type: int, row: int) -> bool:
+        for i in range(5):
+            # we just want to check the square with the same type as we are trying to place
+            if self.wall[row][0] == type:
+                if self.wall[row][1] == 1:
+                    # Already exists so cannot be in the pattern line
+                    return False
+                else:
+                    return True
+    
+    # Print the contents of the wall
     def print_wall(self) -> None:
         # color table with spacing to align for print out
         color = ["       Red", "    Orange", "     Black", "      Blue", "Light Blue"]
