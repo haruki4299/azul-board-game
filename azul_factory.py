@@ -1,26 +1,31 @@
 import random
 
-# Index List => "Red": 0, "Orange": 1, "Black": 2, "Blue": 3, "Light Blue": 4, "First": 5
-     
+# Represent tiles on display as an array of integers with index representing how many of the type
+# example [Red, Orange, Black, Blue, Light Blue, First] --> [0, 3, 1, 0, 0, 0] = 3 oranges and 1 black
+# Tile type => "Red": 0, "Orange": 1, "Black": 2, "Blue": 3, "Light Blue": 4, "First": 5
+
+# Class representing the bag in which we draw tiles to the factory from
 class Bag:
     def __init__(self) -> None:
-        self.contents = [20, 20, 20, 20, 20]
+        self.contents = [20, 20, 20, 20, 20] # init with 20 of each tile
         self.size = 100
         
-    # Draw a tile from the bag
+    # Draw a random tile from the bag
     # Return integer representing the tile type
     def draw_tile(self) -> int:
         if self.size == 0:
-            # Should reset tile 
+            # Should never happen => always call refill_bag before
             return -1
         
+        # Choose a random number until it corresponds to a tile that is still in the bag
         while True:
             index = random.randint(0, 4)
             if self.contents[index] != 0:
                 self.contents[index] -= 1
                 self.size -= 1
                 return index
-            
+    
+    # If there is nothing in the bag, refill the bag with the tiles out of the game
     def refill_bag(self, reserve_tiles: list[int]) -> None:
         # Only Refill if there are no more in the bag
         if self.size == 0:
@@ -29,24 +34,24 @@ class Bag:
                 self.contents[i] = reserve_tiles[i]
                 self.size += reserve_tiles[i]
                 reserve_tiles[i] = 0
-    
-# Represent tiles on display as an array of integers with index representing how many of the type
-# example [Red, Orange, Black, Blue, Light Blue, First] --> [0, 3, 1, 0, 0, 0] = 3 oranges and 1 black
 
+# The middle of the factory. Tiles that were not taken on the display go here. "First" tile goes here at start
 class FactoryMiddle:
     def __init__(self) -> None:
         # Initialize with just the first marker tile
         self.tiles = [0, 0, 0, 0, 0, 1]
-        self.size = 0
+        self.size = 0 # do not count the first marker 
         
-    # Once tiles are taken from a factory display all of the rest of the tiles get put in the middle
+    # Once tiles are taken from a factory display get list of remaining tiles
+    # all of the rest of the tiles get put in the middle
     def add_tiles(self, tile_array: list[int]) -> None:
         for i, tile in enumerate(tile_array):
             self.tiles[i] += tile
             self.size += tile
        
-    # Remove all of one type of array 
-    # If this is the first time a tile is taken from the middle return true
+    # Remove one type of tile from the middle
+    # If this is the first time a tile is taken from the middle 
+    # return true so that the first marker can also be taken
     def remove_tiles(self, type: int) -> (int, bool):
         num_tiles = self.tiles[type]
         # If num tiles is 0 then this is an invalid pick
@@ -71,6 +76,7 @@ class FactoryDisplay:
         self.tiles = [0, 0, 0, 0, 0]
         self.size = 0
     
+    # Add a single tile to the display (four max)
     # Return Bool indicating whether we were able to add or not
     def add_tile(self, type: int) -> bool:
         if self.size <= 4:
@@ -79,13 +85,15 @@ class FactoryDisplay:
         else:
             return False
     
-    # Return a list indicating the types and number of tiles to go into the middle
-    def remove_tile(self, type: int) -> (bool, list[int]):
+    # Remove a single type of tile from the display
+    # Return the number of tiles taken and list indicating the types and number of tiles to go into the middle
+    # If unable to remove the tile return -1
+    def remove_tile(self, type: int) -> (int, list[int]):
         unused_tiles = [0, 0, 0, 0, 0]
         num_tiles = self.tiles[type]
         
         if num_tiles == 0:
-            return False, unused_tiles
+            return -1, unused_tiles
         else:
             self.tiles[type] = 0
             self.size = 0
@@ -94,7 +102,7 @@ class FactoryDisplay:
             unused_tiles = self.tiles[i]
             self.tiles[i] = 0
     
-        return True, unused_tiles
+        return num_tiles, unused_tiles
         
 # Represents all of the factory: includes factory display, middle area, and the bag of tiles
 class Factory:
@@ -122,6 +130,7 @@ class Factory:
                 display = FactoryDisplay()
                 self.displays.append(display)
         
+    # Fill display with 4 tiles each from the bag
     def fill_display(self) -> None:
         for display in self.displays:
             # Four tiles per display
@@ -147,10 +156,13 @@ class Factory:
         
         return num_tiles, unused_tiles
     
-    def remove_tile_from_game(self, unused_tiles: list[int]):
-        for i, num in enumerate(unused_tiles):
+    # Tiles that didn't make it to the wall go out of the game until the bag is refilled
+    # Figure out once rest of the game is done
+    def remove_tile_from_game(self, removed_tiles: list[int]):
+        for i, num in enumerate(removed_tiles):
             self.reserve_tiles[i] += num
     
+    # Print what is in the display
     def print_displays(self):
         color = ["Red", "Orange", "Black", "Blue", "Light Blue"]
         for i, display in enumerate(self.displays):
