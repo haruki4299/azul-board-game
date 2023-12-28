@@ -1,5 +1,11 @@
+from azul_board import Board
+
 class HumanPlayer:
-    pass
+    def __init__(self) -> None:
+        self.board = Board()
+        self.total_points = 0
 
 class ComputerPlayer:
-    pass
+    def __init__(self) -> None:
+        self.board = Board()
+        self.total_points = 0
