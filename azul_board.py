@@ -10,24 +10,68 @@ class Wall:
                      [[2, 0], [4, 0], [3, 0], [1, 0], [0, 0]],
                      [[0, 0], [2, 0], [4, 0], [3, 0], [1, 0]],
                      [[1, 0], [0, 0], [2, 0], [4, 0], [3, 0]]]
-        
+    
+    # Score 
+    def place_tile_points(self, row: int, col: int) -> int:
+        # Count vertical runs
+        vertical_runs = 1
+        for i in range(row - 1, -1, -1):
+            if self.wall[i][col][1] == 1:
+                vertical_runs += 1
+            else:
+                break
+
+        for i in range(row + 1, 5):
+            if self.wall[i][col][1] == 1:
+                vertical_runs += 1
+            else:
+                break
+
+        # Count horizontal runs
+        horizontal_runs = 1
+        for i in range(col - 1, -1, -1):
+            if self.wall[row][i][1] == 1:
+                horizontal_runs += 1
+            else:
+                break
+
+        for i in range(col + 1, 5):
+            if self.wall[row][i][1] == 1:
+                horizontal_runs += 1
+            else:
+                break
+
+        # Calculate total points
+        if horizontal_runs > 1 and vertical_runs > 1:
+            # Then we count the middle twice
+            total_points = vertical_runs + horizontal_runs
+        else:
+            # There is only one of horizontal or vertical connections or the tile is by itself
+            total_points = max(vertical_runs, horizontal_runs)
+
+        return total_points
+    
     # Add a tile to the wall
     # This should always be successful with correct validation
-    def add_tile(self, row: int, type: int) -> bool:
+    def add_tile(self, row: int, type: int) -> (bool, int):
         for i in range(5):
             if type == self.wall[row][i][0]:
+                if self.wall[row][i][1] == 1:
+                    # Tile already there
+                    break
                 self.wall[row][i][1] = 1
-                return True
+                points = self.place_tile_points(row, i)
+                return True, points
         
-        return False
+        return False, 0
     
     # If the tile already exists in the wall we cannot place that tile in the pattern line
     # Checks if the tile already exists in the row and returns False if so (putting it in the patternline is not valid)
     def check_valid_move(self, type: int, row: int) -> bool:
         for i in range(5):
             # we just want to check the square with the same type as we are trying to place
-            if self.wall[row][0] == type:
-                if self.wall[row][1] == 1:
+            if self.wall[row][i][0] == type:
+                if self.wall[row][i][1] == 1:
                     # Already exists so cannot be in the pattern line
                     return False
                 else:
@@ -47,6 +91,57 @@ class Wall:
                     print(color[self.wall[i][j][0]], ": 0", end=" ")
             print()
         print()
+    
+    # Calculate Extra Points at the End of the game
+    # Find horizontal (2 points), vertical (5 points), and all of one type (10 points) 
+    def calculate_points(self) -> int:
+        # Horizontal Line
+        h_lines = 0
+        for i in range(5):
+            count = 0
+            for j in range(5):
+                if self.wall[i][j][1] == 0:
+                    break
+                else:
+                    count += 1
+            if count == 5:
+                h_lines += 1
+                
+        # Vertical Line
+        v_lines = 0
+        for i in range(5):
+            count = 0
+            for j in range(5):
+                if self.wall[j][i][1] == 0:
+                    break
+                else:
+                    count += 1
+            if count == 5:
+                v_lines += 1
+                
+        # Each type
+        total_points = 0
+        num_tile_on_wall = [0, 0, 0, 0, 0] # type 0 - 4
+        for i in range(5):
+            for j in range(5):
+                if self.wall[i][j][0] == 0 and self.wall[i][j][1] == 1:
+                    num_tile_on_wall[0] += 1
+                elif self.wall[i][j][0] == 1 and self.wall[i][j][1] == 1:
+                    num_tile_on_wall[1] += 1
+                elif self.wall[i][j][0] == 2 and self.wall[i][j][1] == 1:
+                    num_tile_on_wall[2] += 1
+                elif self.wall[i][j][0] == 3 and self.wall[i][j][1] == 1:
+                    num_tile_on_wall[3] += 1
+                elif self.wall[i][j][0] == 4 and self.wall[i][j][1] == 1:
+                    num_tile_on_wall[4] += 1
+        for num in num_tile_on_wall:
+            if num == 5:
+                total_points += 10
+                
+        # Add the rest
+        total_points += (h_lines * 2 + v_lines * 5)
+        
+        return total_points
 
 # Complete the pattern lines to move tiles to the wall for points
 class PatternLines:
@@ -155,8 +250,54 @@ class FloorLine:
         print("\n")
     
 class Board:
-    def __init__(self, player: int) -> None:
-        self.player = player
+    def __init__(self) -> None:
         self.wall = Wall()
         self.pattern_line = PatternLines()
         self.floor = FloorLine()
+        
+        self.point_tally = 0
+        
+    def place_tile(self, row: int, type: int, number_of_tiles: int) -> None:
+        # First check if placing the tile there is a valid move
+        if self.pattern_line.check_valid_move(type, row) and self.wall.check_valid_move(type, row):
+            overflow_tiles = self.pattern_line.add_tiles(row, type, number_of_tiles)
+            
+            # Add any overflow tiles to the floor line
+            for i in range(overflow_tiles):
+                suc = self.floor.add_to_floor(type)
+                print(suc) # Later do something to keep track of tiles if we were not able to add to floor -> goes in box irl
+      
+    # Calculate Extra Points at the End of the game
+    # Find horizontal (2 points), vertical (5 points), and all of one type (10 points) 
+    def calculate_points(self) -> None:
+        wall_points = self.wall.calculate_points()
+        deductions = self.floor.calculate_floor_points()
+        
+        self.point_tally += (wall_points + deductions)
+        
+    def move_tiles(self) -> None:
+        unused_tiles = [0, 0, 0, 0, 0]
+        total_points = 0
+        
+        for i in range(5):
+            type = self.pattern_line.pattern_line[i][0]
+            if type != -1 and self.pattern_line.pattern_line[i][1] == self.pattern_line.pattern_line[i][2]:
+                success, point = self.wall.add_tile(i, type)
+                total_points += point
+            
+                if success != False:
+                    # Should never happen
+                    print("Error Failed to add tile to Wall")
+                    
+                unused_tiles[type] += (self.pattern_line.pattern_line[i][1] - 1)
+        
+        self.point_tally += total_points
+        
+    def print_board(self) -> None:
+        print("Pattern Line:")
+        self.pattern_line.print_pattern_line()
+        print("Wall:")
+        self.wall.print_wall()
+        print("Floor Line:")
+        self.floor.print_floor()
+        print("Points Total: ", self.point_tally, end="\n\n")

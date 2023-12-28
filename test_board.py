@@ -2,19 +2,24 @@ from azul_board import Board, Wall, FloorLine, PatternLines
 
 def main():
     print("Testing the board Functionality")
-    
+    """
     # Test the wall
     wall = Wall()
     wall.print_wall()
     
-    wall.add_tile(0, 2)
-    wall.add_tile(0, 1)
-    wall.add_tile(0, 3)
-    wall.add_tile(1, 3)
+    
+    print(wall.add_tile(0, 0)) # 1 point
+    print(wall.add_tile(1, 0)) # 1 point
+    print(wall.add_tile(1, 2)) # 2 points
+    print(wall.add_tile(3, 4)) # 1 point
+    print(wall.add_tile(4, 2)) # 2 points
+    print(wall.add_tile(2, 4)) # 1 point
+    print(wall.add_tile(2, 1)) # 2 points
+    print(wall.add_tile(2, 3)) # 6 points
+    
     wall.print_wall()
     print("---------------------------------")
-    
-    
+   
     # Test Floor
     floor = FloorLine()
     floor.print_floor()
@@ -48,5 +53,21 @@ def main():
     print(pattern.add_tiles(4, 2, 3)) # Should print 0
     
     pattern.print_pattern_line()
+    """
+    # Overall integration
+    board = Board()
+    
+    board.print_board()
+    
+    board.place_tile(0, 1, 2)
+    board.place_tile(0, 2, 1)
+    board.place_tile(1, 2, 2)
+    board.place_tile(3, 4, 4)
+    
+    board.print_board()
+    
+    board.move_tiles()
+    
+    board.print_board()
     
 main()
