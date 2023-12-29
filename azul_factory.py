@@ -34,6 +34,8 @@ class Bag:
                 self.contents[i] = reserve_tiles[i]
                 self.size += reserve_tiles[i]
                 reserve_tiles[i] = 0
+        
+        print(self.size)
 
 # The middle of the factory. Tiles that were not taken on the display go here. "First" tile goes here at start
 class FactoryMiddle:
@@ -99,9 +101,9 @@ class FactoryDisplay:
             self.size = 0
             
         for i in range(5):
-            unused_tiles = self.tiles[i]
+            unused_tiles[i] = self.tiles[i]
             self.tiles[i] = 0
-    
+            
         return num_tiles, unused_tiles
         
 # Represents all of the factory: includes factory display, middle area, and the bag of tiles
@@ -138,29 +140,33 @@ class Factory:
                 self.bag.refill_bag(self.reserve_tiles) # Only refills if the bag is empty
                 tile = self.bag.draw_tile()
                 display.add_tile(tile)
+        
+        self.middle.tiles[5] = 1
     
     # Remove one type of tile from a factory display
     # Returns how many tiles were found of the type and a list of the rest of the tiles
-    def remove_tile(self, which_display: int, type: int) -> (int, list[int]):
-        unused_tiles = [0, 0, 0, 0, 0]
-        display = self.displays[which_display]
-        num_tiles = display.tiles[type]
-        
-        if num_tiles == 0:
-            return num_tiles, unused_tiles
+    def remove_tile(self, which_display: int, type: int) -> int:
+        if which_display == -1:
+            num_tiles, success = self.middle.remove_tiles(type)
+            print(success)
+        else:
+            display = self.displays[which_display]
+            num_tiles, unused_tiles = display.remove_tile(type)
 
-        display.tiles[type] = 0
-        display.size = 0
-        # Move unused tiles to the middle
-        self.middle.add_tiles(display.tiles)
+            # Move unused tiles to the middle
+            self.middle.add_tiles(unused_tiles)
         
-        return num_tiles, unused_tiles
+        return num_tiles
     
-    # Tiles that didn't make it to the wall go out of the game until the bag is refilled
-    # Figure out once rest of the game is done
-    def remove_tile_from_game(self, removed_tiles: list[int]):
-        for i, num in enumerate(removed_tiles):
-            self.reserve_tiles[i] += num
+    # Checks if we are at the end of the round. 
+    # Which is when we don't have anymore tiles in the factory
+    def check_end(self) -> bool:
+        if self.middle.size == 0:
+            for display in self.displays:
+                if display.size != 0:
+                    return False
+            return True
+        return False
     
     # Print what is in the display
     def print_displays(self):
