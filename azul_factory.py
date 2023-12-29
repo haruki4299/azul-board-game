@@ -34,8 +34,6 @@ class Bag:
                 self.contents[i] = reserve_tiles[i]
                 self.size += reserve_tiles[i]
                 reserve_tiles[i] = 0
-        
-        print(self.size)
 
 # The middle of the factory. Tiles that were not taken on the display go here. "First" tile goes here at start
 class FactoryMiddle:
@@ -145,10 +143,11 @@ class Factory:
     
     # Remove one type of tile from a factory display
     # Returns how many tiles were found of the type and a list of the rest of the tiles
-    def remove_tile(self, which_display: int, type: int) -> int:
+    # If we took first from the middle (-1) return True as well
+    def remove_tile(self, which_display: int, type: int) -> (int, bool):
+        first = False
         if which_display == -1:
-            num_tiles, success = self.middle.remove_tiles(type)
-            print(success)
+            num_tiles, first = self.middle.remove_tiles(type)
         else:
             display = self.displays[which_display]
             num_tiles, unused_tiles = display.remove_tile(type)
@@ -156,17 +155,21 @@ class Factory:
             # Move unused tiles to the middle
             self.middle.add_tiles(unused_tiles)
         
-        return num_tiles
+        return num_tiles, first
     
     # Checks if we are at the end of the round. 
     # Which is when we don't have anymore tiles in the factory
-    def check_end(self) -> bool:
+    def check_end_round(self) -> bool:
         if self.middle.size == 0:
             for display in self.displays:
                 if display.size != 0:
                     return False
             return True
         return False
+    
+    def update_reserve_tiles(self, tile_array: list[int]) -> None:
+        for i in range(5):
+            self.reserve_tiles[i] += tile_array[i]
     
     # Print what is in the display
     def print_displays(self):

@@ -26,10 +26,11 @@ def main():
     # Test with Four Players
     print("Testing with four players\n")
     factory = Factory(4)
-    factory.fill_display()
     print(factory.bag.size)
+    factory.fill_display()
     factory.print_displays()
     factory.reserve_tiles = [10, 10, 10, 12, 2]
+    print(factory.bag.size)
     
     while not factory.check_end():
         which_display = int(input("Enter Display: "))
@@ -38,9 +39,10 @@ def main():
         print("Number of Tiles: ", num_tiles)
         factory.print_displays()
         
-    factory.fill_display()
     print(factory.bag.size)
+    factory.fill_display()
     factory.print_displays()
+    print(factory.bag.size)
     
     while not factory.check_end():
         which_display = int(input("Enter Display: "))
@@ -49,9 +51,10 @@ def main():
         print("Number of Tiles: ", num_tiles)
         factory.print_displays()
         
-    factory.fill_display()
     print(factory.bag.size)
+    factory.fill_display()
     factory.print_displays()
+    print(factory.bag.size)
     
 
 if __name__ == '__main__':

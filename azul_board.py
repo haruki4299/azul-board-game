@@ -299,6 +299,17 @@ class Board:
         self.point_tally += total_points
         
         return unused_tiles
+    
+    # One Horizontal Line is Game End
+    def check_end_game(self) -> None:
+        # Check each row
+        for i in range(5):
+            count = 0
+            for j in range(5):
+                count += self.wall.wall[i][j][1]
+            if count == 5:
+                return True
+        return False
         
     def print_board(self) -> None:
         print("Pattern Line:")
