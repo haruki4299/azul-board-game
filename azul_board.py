@@ -261,11 +261,14 @@ class Board:
         # First check if placing the tile there is a valid move
         if self.pattern_line.check_valid_move(type, row) and self.wall.check_valid_move(type, row):
             overflow_tiles = self.pattern_line.add_tiles(row, type, number_of_tiles)
+        else:
+            # If not valid move place them all to the floor line
+            overflow_tiles = number_of_tiles
             
-            # Add any overflow tiles to the floor line
-            for i in range(overflow_tiles):
-                suc = self.floor.add_to_floor(type)
-                print(suc) # Later do something to keep track of tiles if we were not able to add to floor -> goes in box irl
+        # Add any overflow tiles to the floor line
+        for i in range(overflow_tiles):
+            suc = self.floor.add_to_floor(type)
+            print("Adding to Floor ", suc) # Later do something to keep track of tiles if we were not able to add to floor -> goes in box irl
       
     # Calculate Extra Points at the End of the game
     # Find horizontal (2 points), vertical (5 points), and all of one type (10 points) 
@@ -275,7 +278,7 @@ class Board:
         
         self.point_tally += (wall_points + deductions)
         
-    def move_tiles(self) -> None:
+    def move_tiles(self) -> list[int]:
         unused_tiles = [0, 0, 0, 0, 0]
         total_points = 0
         
@@ -285,13 +288,17 @@ class Board:
                 success, point = self.wall.add_tile(i, type)
                 total_points += point
             
-                if success != False:
+                if success == False:
                     # Should never happen
                     print("Error Failed to add tile to Wall")
                     
-                unused_tiles[type] += (self.pattern_line.pattern_line[i][1] - 1)
+                unused_tiles[type] += (self.pattern_line.pattern_line[i][2] - 1)
+            elif type != -1:
+                unused_tiles[type] += self.pattern_line.pattern_line[i][2]
         
         self.point_tally += total_points
+        
+        return unused_tiles
         
     def print_board(self) -> None:
         print("Pattern Line:")
