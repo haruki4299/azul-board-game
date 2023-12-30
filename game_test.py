@@ -60,4 +60,10 @@ while True:
         print("Game End")
         break
 
-    
+# Final Point calculation
+player1.board.calculate_points()
+player2.board.calculate_points()
+
+print("Final:")
+print("Player1: ", player1.get_points())
+print("Player2: ", player2.get_points())

@@ -1,8 +1,7 @@
 import azul_factory
 
 def main():
-    bag = azul_factory.Bag()
-    print(bag.draw_tile().type)
+    pass
 
 if __name__ == '__main__':
     main()

@@ -187,6 +187,9 @@ class PatternLines:
             return False
         
         return True
+    
+    def reset_pattern_line(self) -> None:
+        self.pattern_line = [[-1,1,0],[-1,2,0],[-1,3,0],[-1,4,0],[-1,5,0]]
 
     # Print the each of the pattern lines
     def print_pattern_line(self) -> None:
@@ -238,6 +241,9 @@ class FloorLine:
                 break
         return total
     
+    def reset_floor(self) -> None:
+        self.floor = [-1, -1, -1, -1, -1, -1, -1]
+    
     # Print the floor line
     def print_floor(self) -> None:
         color = ["Red", "Orange", "Black", "Blue", "Light-Blue", "First"]
@@ -277,7 +283,9 @@ class Board:
         deductions = self.floor.calculate_floor_points()
         
         self.point_tally += (wall_points + deductions)
-        
+    
+    # Move Tiles for the Wall Tiling phase
+    # Calculate points and reset board
     def move_tiles(self) -> list[int]:
         unused_tiles = [0, 0, 0, 0, 0]
         total_points = 0
@@ -297,6 +305,11 @@ class Board:
                 unused_tiles[type] += self.pattern_line.pattern_line[i][2]
         
         self.point_tally += total_points
+        
+        self.point_tally += self.floor.calculate_floor_points()
+        
+        self.pattern_line.reset_pattern_line()
+        self.floor.reset_floor()
         
         return unused_tiles
     
