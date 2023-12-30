@@ -10,7 +10,7 @@ class HumanPlayer:
             display = int(input("Which display do you want to take tiles from?"))
             color = int(input("Which type of tile will you take? (Red: 0, Orange: 1, Black: 2, Blue: 3, Light Blue: 4): "))
             
-            if display >= 0 and display <= (1 + nPlayers * 2) and color >= 0 and color <= 4:
+            if display >= -1 and display <= (1 + nPlayers * 2) and color >= 0 and color <= 4:
                 break
             
             print("Invalid Input. Select Again.")
