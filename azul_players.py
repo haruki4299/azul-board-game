@@ -5,10 +5,16 @@ class HumanPlayer:
         self.name = name
         self.board = Board()
         
-    def choose_tile(self) -> (int, int):
-        display = int(input("Which display do you want to take tiles from?"))
-        color = int(input("Which type of tile will you take? (Red: 0, Orange: 1, Black: 2, Blue: 3, Light Blue: 4): "))
-        
+    def choose_tile(self, nPlayers: int) -> (int, int):
+        while True:
+            display = int(input("Which display do you want to take tiles from?"))
+            color = int(input("Which type of tile will you take? (Red: 0, Orange: 1, Black: 2, Blue: 3, Light Blue: 4): "))
+            
+            if display >= 0 and display <= (1 + nPlayers * 2) and color >= 0 and color <= 4:
+                break
+            
+            print("Invalid Input. Select Again.")
+
         return display, color
     
     def place_tiles(self, type: int, number_of_tiles: int) -> None:

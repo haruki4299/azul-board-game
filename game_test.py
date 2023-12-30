@@ -18,8 +18,14 @@ while True:
         # Player1 chooses tiles
         print("Player1 chooses tiles")
         factory.print_displays()
-        display, color = player1.choose_tile()
-        num_tiles, first = factory.remove_tile(display, color)
+        while True:
+            display, color = player1.choose_tile(2)
+            num_tiles, first = factory.remove_tile(display, color)
+            print(num_tiles)
+            if num_tiles != 0:
+                break
+            else:
+                print("Invalid Selection. Try Again")
         if first:
             player1.board.floor.add_to_floor(5)
         player1.board.print_board()
@@ -33,8 +39,13 @@ while True:
         print("Player2 chooses tiles")
         # Player2 chooses tiles
         factory.print_displays()
-        display, color = player2.choose_tile()
-        num_tiles, first = factory.remove_tile(display, color)
+        while True:
+            display, color = player2.choose_tile(2)
+            num_tiles, first = factory.remove_tile(display, color)
+            if num_tiles != 0:
+                break
+            else:
+                print("Invalid Selection. Try Again")
         if first:
             player2.board.floor.add_to_floor(5)
         player2.board.print_board()

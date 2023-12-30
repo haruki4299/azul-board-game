@@ -93,7 +93,7 @@ class FactoryDisplay:
         num_tiles = self.tiles[type]
         
         if num_tiles == 0:
-            return -1, unused_tiles
+            return num_tiles, unused_tiles
         else:
             self.tiles[type] = 0
             self.size = 0
