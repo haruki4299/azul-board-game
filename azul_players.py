@@ -18,7 +18,13 @@ class HumanPlayer:
         return display, color
     
     def place_tiles(self, type: int, number_of_tiles: int) -> None:
-        row = int(input("Which Pattern Line would you like to put the tile at?: "))
+        while True:
+            row = int(input("Which Pattern Line would you like to put the tile at?: "))
+            if row >= 0 and row <= 4:
+                break
+            else:
+                print("Invalid Input. Select Again.")
+                
         self.board.place_tile(row, type, number_of_tiles)
         self.board.print_board()
         
