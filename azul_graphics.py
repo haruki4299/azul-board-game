@@ -10,6 +10,7 @@ class AzulGUI:
         self.player_pattern_line = []
         self.player_wall = []
         self.player_floor = []
+        self.player_points = []
 
         # Create canvas to draw on
         self.canvas = tk.Canvas(root, width=1200, height=800, bg="green")
@@ -91,7 +92,8 @@ class AzulGUI:
         self.player_floor.append(floor_squares)
             
         # Display Player Name and Points
-        self.canvas.create_text(topLeftx + 450, topLefty + 280, text=f"Player {player}: {0} points", font=("Arial", 24), fill="white")
+        text_id = self.canvas.create_text(topLeftx + 450, topLefty + 280, text=f"Player {player}: {0} points", font=("Arial", 24), fill="white")
+        self.player_points.append(text_id)
 
     def draw_factory(self):
         self.draw_middle()
