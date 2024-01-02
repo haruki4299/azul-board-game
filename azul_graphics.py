@@ -6,6 +6,10 @@ class AzulGUI:
         self.root.title("Azul Game Board")
         
         self.nPlayers = nPlayers
+        
+        self.player_pattern_line = []
+        self.player_wall = []
+        self.player_floor = []
 
         # Create canvas to draw on
         self.canvas = tk.Canvas(root, width=1200, height=800, bg="green")
@@ -44,28 +48,48 @@ class AzulGUI:
             topLeftx = 620
             topLefty = 470
         
+        pattern_line_squares = []
+        # Pattern Line Squares
         for i in range(1,6):
             for j in range(1, i+1):
-                self.canvas.create_line(topLeftx + 3 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), topLeftx + 47 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), fill="black", width=2)
-                self.canvas.create_line(topLeftx + 3 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), topLeftx + 3 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), fill="black", width=2)
-                self.canvas.create_line(topLeftx + 47 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), topLeftx + 47 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), fill="black", width=2)
-                self.canvas.create_line(topLeftx + 3 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), topLeftx + 47 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), fill="black", width=2)
-        
+                square_id = self.canvas.create_rectangle(
+                    topLeftx + 3 + 50 * (5 - j),
+                    topLefty + 3 + 50 * (i - 1),
+                    topLeftx + 47 + 50 * (5 - j),
+                    topLefty + 47 + 50 * (i - 1),
+                    outline="black",
+                    width=2
+                )
+                pattern_line_squares.append(square_id)
+        print(pattern_line_squares)
+        self.player_pattern_line.append(pattern_line_squares)
+                
         # Draw Wall
+        wall_squares = []
         for i in range(5):
             for j in range(5):
-                self.canvas.create_line(topLeftx + 300 + 3 + 50 * j, topLefty + 3 + 50 * i, topLeftx + 300 + 47 + 50 * j, topLefty + 3 + 50 * i, fill="black", width=2)
-                self.canvas.create_line(topLeftx + 300 + 3 + 50 * j, topLefty + 3 + 50 * i, topLeftx + 300 + 3 + 50 * j, topLefty + 47 + 50 * i, fill="black", width=2)
-                self.canvas.create_line(topLeftx + 300 + 47 + 50 * j, topLefty + 3 + 50 * i, topLeftx + 300 + 47 + 50 * j, topLefty + 47 + 50 * i, fill="black", width=2)
-                self.canvas.create_line(topLeftx + 300 + 3 + 50 * j, topLefty + 47 + 50 * i, topLeftx + 300 + 47 + 50 * j, topLefty + 47 + 50 * i, fill="black", width=2)
+                x1 = topLeftx + 300 + 3 + 50 * j
+                y1 = topLefty + 3 + 50 * i
+                x2 = topLeftx + 300 + 47 + 50 * j
+                y2 = topLefty + 47 + 50 * i
+
+                square_id = self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", width=2)
+                wall_squares.append(square_id)
+        self.player_wall.append(wall_squares)
+
 
         # Draw Floor
+        floor_squares = []
         for i in range(7):
-            self.canvas.create_line(topLeftx + 3 + 50 * i, topLefty + 260 + 3, topLeftx + 47 + 50 * i, topLefty + 260 + 3, fill="black", width=2)
-            self.canvas.create_line(topLeftx + 3 + 50 * i, topLefty + 260 + 3, topLeftx + 3 + 50 * i, topLefty + 260 + 47, fill="black", width=2)
-            self.canvas.create_line(topLeftx + 47 + 50 * i, topLefty + 260 + 3, topLeftx + 47 + 50 * i, topLefty + 260 + 47, fill="black", width=2)
-            self.canvas.create_line(topLeftx + 3 + 50 * i, topLefty + 260 + 47, topLeftx + 47 + 50 * i, topLefty + 260 + 47, fill="black", width=2)
+            x1 = topLeftx + 3 + 50 * i
+            y1 = topLefty + 260 + 3
+            x2 = topLeftx + 47 + 50 * i
+            y2 = topLefty + 260 + 47
 
+            square_id = self.canvas.create_rectangle(x1, y1, x2, y2, outline="black", width=2)
+            floor_squares.append(square_id)
+        self.player_floor.append(floor_squares)
+            
         # Display Player Name and Points
         self.canvas.create_text(topLeftx + 450, topLefty + 280, text=f"Player {player}: {0} points", font=("Arial", 24), fill="white")
 
@@ -141,6 +165,9 @@ class AzulGUI:
         x = self.canvas.canvasx(event.x)
         y = self.canvas.canvasy(event.y)
         print(f"Clicked at coordinates: ({x}, {y})")
+        
+        square_id = self.player_pattern_line[1][3]
+        self.canvas.itemconfig(square_id, fill="red")
 
     def run(self):
         self.root.mainloop()
