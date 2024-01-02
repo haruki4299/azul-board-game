@@ -332,3 +332,5 @@ class Board:
         print("Floor Line:")
         self.floor.print_floor()
         print("Points Total: ", self.point_tally, end="\n\n")
+        
+    # Bug make sure invalid placement ends up in the floor

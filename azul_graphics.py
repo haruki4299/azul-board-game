@@ -15,6 +15,11 @@ class AzulGUI:
         self.draw_dividing_lines()
         
         self.draw_factory()
+        
+        self.draw_player_board(1)
+        self.draw_player_board(2)
+        self.draw_player_board(3)
+        self.draw_player_board(4)
 
         # Bind mouse click event
         self.canvas.bind("<Button-1>", self.on_canvas_click)
@@ -24,9 +29,45 @@ class AzulGUI:
         self.canvas.create_line(600, 0, 600, 350, fill="black", width=2)
         self.canvas.create_line(600, 450, 600, 800, fill="black", width=2)
 
-        # Draw horizontal line separating top and bottom areas
-        self.canvas.create_line(0, 350, 1200, 350, fill="black", width=2)
-        self.canvas.create_line(0, 450, 1200, 450, fill="black", width=2)
+    def draw_player_board(self, player: int):
+        # Draw Pattern Line
+        if player == 1:
+            topLeftx = 20
+            topLefty = 20
+        elif player == 2:
+            topLeftx = 620
+            topLefty = 20
+        elif player == 3:
+            topLeftx = 20
+            topLefty = 470
+        elif player == 4:
+            topLeftx = 620
+            topLefty = 470
+        
+        for i in range(1,6):
+            for j in range(1, i+1):
+                self.canvas.create_line(topLeftx + 3 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), topLeftx + 47 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), fill="black", width=2)
+                self.canvas.create_line(topLeftx + 3 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), topLeftx + 3 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), fill="black", width=2)
+                self.canvas.create_line(topLeftx + 47 + 50 * (5 - j), topLefty + 3 + 50 * (i-1), topLeftx + 47 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), fill="black", width=2)
+                self.canvas.create_line(topLeftx + 3 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), topLeftx + 47 + 50 * (5 - j), topLefty + 47 + 50 * (i-1), fill="black", width=2)
+        
+        # Draw Wall
+        for i in range(5):
+            for j in range(5):
+                self.canvas.create_line(topLeftx + 300 + 3 + 50 * j, topLefty + 3 + 50 * i, topLeftx + 300 + 47 + 50 * j, topLefty + 3 + 50 * i, fill="black", width=2)
+                self.canvas.create_line(topLeftx + 300 + 3 + 50 * j, topLefty + 3 + 50 * i, topLeftx + 300 + 3 + 50 * j, topLefty + 47 + 50 * i, fill="black", width=2)
+                self.canvas.create_line(topLeftx + 300 + 47 + 50 * j, topLefty + 3 + 50 * i, topLeftx + 300 + 47 + 50 * j, topLefty + 47 + 50 * i, fill="black", width=2)
+                self.canvas.create_line(topLeftx + 300 + 3 + 50 * j, topLefty + 47 + 50 * i, topLeftx + 300 + 47 + 50 * j, topLefty + 47 + 50 * i, fill="black", width=2)
+
+        # Draw Floor
+        for i in range(7):
+            self.canvas.create_line(topLeftx + 3 + 50 * i, topLefty + 260 + 3, topLeftx + 47 + 50 * i, topLefty + 260 + 3, fill="black", width=2)
+            self.canvas.create_line(topLeftx + 3 + 50 * i, topLefty + 260 + 3, topLeftx + 3 + 50 * i, topLefty + 260 + 47, fill="black", width=2)
+            self.canvas.create_line(topLeftx + 47 + 50 * i, topLefty + 260 + 3, topLeftx + 47 + 50 * i, topLefty + 260 + 47, fill="black", width=2)
+            self.canvas.create_line(topLeftx + 3 + 50 * i, topLefty + 260 + 47, topLeftx + 47 + 50 * i, topLefty + 260 + 47, fill="black", width=2)
+
+        # Display Player Name and Points
+        self.canvas.create_text(topLeftx + 450, topLefty + 280, text=f"Player {player}: {0} points", font=("Arial", 24), fill="white")
 
     def draw_factory(self):
         self.draw_middle()
@@ -35,7 +76,7 @@ class AzulGUI:
                 self.draw_factory_display(i)
         
     def draw_factory_display(self, num:int):
-        start = 160 + 100 * num
+        start = 180 + 110 * num
         # Draw Four Squares
         self.canvas.create_line(start + 3, 353, start + 3, 397, fill="black", width=2)
         self.canvas.create_line(start + 47, 353, start + 47, 397, fill="black", width=2)
@@ -59,40 +100,40 @@ class AzulGUI:
         
     def draw_middle(self):
         # Square for Red
-        self.canvas.create_line(13, 353, 13, 397, fill="red", width=2)
-        self.canvas.create_line(57, 353, 57, 397, fill="red", width=2)
-        self.canvas.create_line(13, 353, 57, 353, fill="red", width=2)
-        self.canvas.create_line(13, 397, 57, 397, fill="red", width=2)
+        self.canvas.create_line(23, 353, 23, 397, fill="red", width=2)
+        self.canvas.create_line(67, 353, 67, 397, fill="red", width=2)
+        self.canvas.create_line(23, 353, 67, 353, fill="red", width=2)
+        self.canvas.create_line(23, 397, 67, 397, fill="red", width=2)
         
         # Square for Orange
-        self.canvas.create_line(13, 403, 13, 447, fill="orange", width=2)
-        self.canvas.create_line(57, 403, 57, 447, fill="orange", width=2)
-        self.canvas.create_line(13, 403, 57, 403, fill="orange", width=2)
-        self.canvas.create_line(13, 447, 57, 447, fill="orange", width=2)
+        self.canvas.create_line(23, 403, 23, 447, fill="orange", width=2)
+        self.canvas.create_line(67, 403, 67, 447, fill="orange", width=2)
+        self.canvas.create_line(23, 403, 67, 403, fill="orange", width=2)
+        self.canvas.create_line(23, 447, 67, 447, fill="orange", width=2)
         
         # Square for Black
-        self.canvas.create_line(63, 353, 63, 397, fill="black", width=2)
-        self.canvas.create_line(107, 353, 107, 397, fill="black", width=2)
-        self.canvas.create_line(63, 353, 107, 353, fill="black", width=2)
-        self.canvas.create_line(63, 397, 107, 397, fill="black", width=2)
+        self.canvas.create_line(73, 353, 73, 397, fill="black", width=2)
+        self.canvas.create_line(117, 353, 117, 397, fill="black", width=2)
+        self.canvas.create_line(73, 353, 117, 353, fill="black", width=2)
+        self.canvas.create_line(73, 397, 117, 397, fill="black", width=2)
         
         # Square for Blue
-        self.canvas.create_line(63, 403, 63, 447, fill="blue", width=2)
-        self.canvas.create_line(107, 403, 107, 447, fill="blue", width=2)
-        self.canvas.create_line(63, 403, 107, 403, fill="blue", width=2)
-        self.canvas.create_line(63, 447, 107, 447, fill="blue", width=2)
+        self.canvas.create_line(73, 403, 73, 447, fill="blue", width=2)
+        self.canvas.create_line(117, 403, 117, 447, fill="blue", width=2)
+        self.canvas.create_line(73, 403, 117, 403, fill="blue", width=2)
+        self.canvas.create_line(73, 447, 117, 447, fill="blue", width=2)
         
         # Square for Light Blue
-        self.canvas.create_line(113, 353, 113, 397, fill="light blue", width=2)
-        self.canvas.create_line(157, 353, 157, 397, fill="light blue", width=2)
-        self.canvas.create_line(113, 353, 157, 353, fill="light blue", width=2)
-        self.canvas.create_line(113, 397, 157, 397, fill="light blue", width=2)
+        self.canvas.create_line(123, 353, 123, 397, fill="light blue", width=2)
+        self.canvas.create_line(167, 353, 167, 397, fill="light blue", width=2)
+        self.canvas.create_line(123, 353, 167, 353, fill="light blue", width=2)
+        self.canvas.create_line(123, 397, 167, 397, fill="light blue", width=2)
         
         # Square for Light Blue
-        self.canvas.create_line(113, 403, 113, 447, fill="white", width=2)
-        self.canvas.create_line(157, 403, 157, 447, fill="white", width=2)
-        self.canvas.create_line(113, 403, 157, 403, fill="white", width=2)
-        self.canvas.create_line(113, 447, 157, 447, fill="white", width=2)
+        self.canvas.create_line(123, 403, 123, 447, fill="white", width=2)
+        self.canvas.create_line(167, 403, 167, 447, fill="white", width=2)
+        self.canvas.create_line(123, 403, 167, 403, fill="white", width=2)
+        self.canvas.create_line(123, 447, 167, 447, fill="white", width=2)
         
 
     def on_canvas_click(self, event):
