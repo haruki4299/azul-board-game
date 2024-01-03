@@ -1,7 +1,27 @@
 import tkinter as tk
 
+class tile_display:
+    def __init__(self, canvas, x1, y1, x2, y2, fill):
+        self.canvas = canvas
+        self.rect_id = canvas.create_rectangle(x1, y1, x2, y2, fill=fill)
+        self.text_id = None
+        
+    def add_text(self, text, font=("Arial", 12), fill="white"):
+        # Get the coordinates of the center of the rectangle
+        x1, y1, x2, y2 = self.canvas.coords(self.rect_id)
+        center_x = (x1 + x2) / 2
+        center_y = (y1 + y2) / 2
+
+        # Create text and associate it with the rectangle
+        self.text_id = self.canvas.create_text(center_x, center_y, text=text, font=font, fill=fill)
+
+    def update_text(self, new_text):
+        if self.text_id:
+            # Update the text content
+            self.canvas.itemconfig(self.text_id, text=new_text)
+
 class AzulGUI:
-    def __init__(self, root, nPlayers: int, pattern_lines: list[list[list[int]]], walls: list[list[list[list[int]]]], floor: list[int]):
+    def __init__(self, root, nPlayers: int, pattern_lines: list[list[list[int]]], walls: list[list[list[list[int]]]], floor: list[int], scores: list[int]):
         self.root = root
         self.root.title("Azul Game Board")
         
@@ -26,7 +46,10 @@ class AzulGUI:
         self.draw_player_board(3)
         self.draw_player_board(4)
         
-        self.update_color(pattern_lines, walls, floor)
+        self.update_color(pattern_lines, walls, floor, scores)
+
+        tile = tile_display(self.canvas, 100, 100, 200, 200, "black")
+        tile.add_text("1")
 
         # Bind mouse click event
         self.canvas.bind("<Button-1>", self.on_canvas_click)
@@ -125,8 +148,10 @@ class AzulGUI:
 
             self.canvas.create_rectangle(x1, y1, x2, y2, outline=colors[i], width=2)
 
+    def update_factory(self, factory_tiles):
+        pass
         
-    def update_color(self, pattern_lines, walls, floor_line):
+    def update_color(self, pattern_lines, walls, floor_line, scores):
         colors = ["red", "orange", "black", "blue", "light blue", "white"]
         
         fill_color = 0
@@ -173,6 +198,15 @@ class AzulGUI:
                 fill_color = floor_line[i][j]
                 if fill_color != -1:
                     self.canvas.itemconfig(square_id, fill=colors[fill_color])
+                    
+        # Update Points Text
+        for i in range(4):
+            text_id = self.player_points[i]
+            point = scores[i]
+            self.canvas.itemconfig(text_id, text=f"Player {i+1}: {point} points")
+            
+        # Update Factory Displays
+        
 
     def on_canvas_click(self, event):
         # Event handler for mouse click on the canvas
@@ -186,7 +220,7 @@ class AzulGUI:
         floor_square = self.player_floor[0][0]
         self.canvas.itemconfig(floor_square, fill="blue")
         
-        floor_square = self.player_floor[0][2]
+        floor_square = self.player_floor[0][1]
         self.canvas.itemconfig(floor_square, fill="black")
 
     def run(self):
@@ -226,5 +260,6 @@ if __name__ == "__main__":
              [3, 1, -1, -1, -1, -1, -1],
              [5, -1, -1, -1, -1, -1, -1],
              [2, -1, -1, -1, -1, -1, -1]]
-    azul_gui = AzulGUI(root, 4, pattern_lines, walls, floor)
+    scores = [1, 2, 3, 4]
+    azul_gui = AzulGUI(root, 4, pattern_lines, walls, floor, scores)
     azul_gui.run()
