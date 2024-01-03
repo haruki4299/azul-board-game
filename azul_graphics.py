@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class AzulGUI:
-    def __init__(self, root, nPlayers: int):
+    def __init__(self, root, nPlayers: int, pattern_lines: list[list[list[int]]], walls: list[list[list[list[int]]]], floor: list[int]):
         self.root = root
         self.root.title("Azul Game Board")
         
@@ -25,6 +25,8 @@ class AzulGUI:
         self.draw_player_board(2)
         self.draw_player_board(3)
         self.draw_player_board(4)
+        
+        self.update_color(pattern_lines, walls, floor)
 
         # Bind mouse click event
         self.canvas.bind("<Button-1>", self.on_canvas_click)
@@ -62,7 +64,6 @@ class AzulGUI:
                     width=2
                 )
                 pattern_line_squares.append(square_id)
-        print(pattern_line_squares)
         self.player_pattern_line.append(pattern_line_squares)
                 
         # Draw Wall
@@ -101,66 +102,77 @@ class AzulGUI:
             for i in range(9):
                 self.draw_factory_display(i)
         
-    def draw_factory_display(self, num:int):
+    def draw_factory_display(self, num: int):
         start = 180 + 110 * num
-        # Draw Four Squares
-        self.canvas.create_line(start + 3, 353, start + 3, 397, fill="black", width=2)
-        self.canvas.create_line(start + 47, 353, start + 47, 397, fill="black", width=2)
-        self.canvas.create_line(start + 3, 353, start + 47, 353, fill="black", width=2)
-        self.canvas.create_line(start + 3, 397, start + 47, 397, fill="black", width=2)
-        
-        self.canvas.create_line(start + 3, 403, start + 3, 447, fill="black", width=2)
-        self.canvas.create_line(start + 47, 403, start + 47, 447, fill="black", width=2)
-        self.canvas.create_line(start + 3, 403, start + 47, 403, fill="black", width=2)
-        self.canvas.create_line(start + 3, 447, start + 47, 447, fill="black", width=2)
-        
-        self.canvas.create_line(start + 53, 353, start + 53, 397, fill="black", width=2)
-        self.canvas.create_line(start + 97, 353, start + 97, 397, fill="black", width=2)
-        self.canvas.create_line(start + 53, 353, start + 97, 353, fill="black", width=2)
-        self.canvas.create_line(start + 53, 397, start + 97, 397, fill="black", width=2)
-        
-        self.canvas.create_line(start + 53, 403, start + 53, 447, fill="black", width=2)
-        self.canvas.create_line(start + 97, 403, start + 97, 447, fill="black", width=2)
-        self.canvas.create_line(start + 53, 403, start + 97, 403, fill="black", width=2)
-        self.canvas.create_line(start + 53, 447, start + 97, 447, fill="black", width=2)
+
+        # Draw first square
+        self.canvas.create_rectangle(start + 3, 353, start + 47, 397, outline="black", width=2)
+        # Draw second square
+        self.canvas.create_rectangle(start + 3, 403, start + 47, 447, outline="black", width=2)
+        # Draw third square
+        self.canvas.create_rectangle(start + 53, 353, start + 97, 397, outline="black", width=2)
+        # Draw fourth square
+        self.canvas.create_rectangle(start + 53, 403, start + 97, 447, outline="black", width=2)
         
     def draw_middle(self):
-        # Square for Red
-        self.canvas.create_line(23, 353, 23, 397, fill="red", width=2)
-        self.canvas.create_line(67, 353, 67, 397, fill="red", width=2)
-        self.canvas.create_line(23, 353, 67, 353, fill="red", width=2)
-        self.canvas.create_line(23, 397, 67, 397, fill="red", width=2)
+        colors = ["red", "orange", "black", "blue", "light blue", "white"]
+        start_x = [23, 23, 73, 73, 123, 123]
+        start_y = [353, 403, 353, 403, 353, 403]
+
+        for i in range(len(colors)):
+            x1, y1 = start_x[i], start_y[i]
+            x2, y2 = x1 + 44, y1 + 44  # Width and height set to 44 for consistency
+
+            self.canvas.create_rectangle(x1, y1, x2, y2, outline=colors[i], width=2)
+
         
-        # Square for Orange
-        self.canvas.create_line(23, 403, 23, 447, fill="orange", width=2)
-        self.canvas.create_line(67, 403, 67, 447, fill="orange", width=2)
-        self.canvas.create_line(23, 403, 67, 403, fill="orange", width=2)
-        self.canvas.create_line(23, 447, 67, 447, fill="orange", width=2)
+    def update_color(self, pattern_lines, walls, floor_line):
+        colors = ["red", "orange", "black", "blue", "light blue", "white"]
         
-        # Square for Black
-        self.canvas.create_line(73, 353, 73, 397, fill="black", width=2)
-        self.canvas.create_line(117, 353, 117, 397, fill="black", width=2)
-        self.canvas.create_line(73, 353, 117, 353, fill="black", width=2)
-        self.canvas.create_line(73, 397, 117, 397, fill="black", width=2)
-        
-        # Square for Blue
-        self.canvas.create_line(73, 403, 73, 447, fill="blue", width=2)
-        self.canvas.create_line(117, 403, 117, 447, fill="blue", width=2)
-        self.canvas.create_line(73, 403, 117, 403, fill="blue", width=2)
-        self.canvas.create_line(73, 447, 117, 447, fill="blue", width=2)
-        
-        # Square for Light Blue
-        self.canvas.create_line(123, 353, 123, 397, fill="light blue", width=2)
-        self.canvas.create_line(167, 353, 167, 397, fill="light blue", width=2)
-        self.canvas.create_line(123, 353, 167, 353, fill="light blue", width=2)
-        self.canvas.create_line(123, 397, 167, 397, fill="light blue", width=2)
-        
-        # Square for Light Blue
-        self.canvas.create_line(123, 403, 123, 447, fill="white", width=2)
-        self.canvas.create_line(167, 403, 167, 447, fill="white", width=2)
-        self.canvas.create_line(123, 403, 167, 403, fill="white", width=2)
-        self.canvas.create_line(123, 447, 167, 447, fill="white", width=2)
-        
+        fill_color = 0
+        # Update Pattern Lines
+        for i in range(4):
+            num_tiles = pattern_lines[i][0][2]
+            fill_color = pattern_lines[i][0][0]
+            for j in range(num_tiles):
+                square_id = self.player_pattern_line[i][j]
+                self.canvas.itemconfig(square_id, fill=colors[fill_color])
+            num_tiles = pattern_lines[i][1][2]
+            fill_color = pattern_lines[i][1][0]
+            for j in range(num_tiles):
+                square_id = self.player_pattern_line[i][1+j]
+                self.canvas.itemconfig(square_id, fill=colors[fill_color])
+            num_tiles = pattern_lines[i][2][2]
+            fill_color = pattern_lines[i][2][0]
+            for j in range(num_tiles):
+                square_id = self.player_pattern_line[i][3+j]
+                self.canvas.itemconfig(square_id, fill=colors[fill_color])
+            num_tiles = pattern_lines[i][3][2]
+            fill_color = pattern_lines[i][3][0]
+            for j in range(num_tiles):
+                square_id = self.player_pattern_line[i][6+j]
+                self.canvas.itemconfig(square_id, fill=colors[fill_color])
+            num_tiles = pattern_lines[i][4][2]
+            fill_color = pattern_lines[i][4][0]
+            for j in range(num_tiles):
+                square_id = self.player_pattern_line[i][10+j]
+                self.canvas.itemconfig(square_id, fill=colors[fill_color])
+                
+        # Update Wall Color
+        for i in range(4):
+            for j in range(25):
+                square_id = self.player_wall[i][j]
+                fill_color = walls[i][j//5][j%5][0]
+                if walls[i][j//5][j%5][1]:
+                    self.canvas.itemconfig(square_id, fill=colors[fill_color])
+                    
+        # Update Floor Line
+        for i in range(4):
+            for j in range(7):
+                square_id = self.player_floor[i][j]
+                fill_color = floor_line[i][j]
+                if fill_color != -1:
+                    self.canvas.itemconfig(square_id, fill=colors[fill_color])
 
     def on_canvas_click(self, event):
         # Event handler for mouse click on the canvas
@@ -168,13 +180,51 @@ class AzulGUI:
         y = self.canvas.canvasy(event.y)
         print(f"Clicked at coordinates: ({x}, {y})")
         
-        square_id = self.player_pattern_line[1][3]
+        square_id = self.player_pattern_line[1][5]
         self.canvas.itemconfig(square_id, fill="red")
+        
+        floor_square = self.player_floor[0][0]
+        self.canvas.itemconfig(floor_square, fill="blue")
+        
+        floor_square = self.player_floor[0][2]
+        self.canvas.itemconfig(floor_square, fill="black")
 
     def run(self):
         self.root.mainloop()
 
 if __name__ == "__main__":
     root = tk.Tk()
-    azul_gui = AzulGUI(root, 4)
+    pattern_lines = [
+        [[0,1,1],[2,2,1],[4,3,3],[-1,4,0],[-1,5,0]],
+        [[3,1,1],[0,2,2],[2,3,3],[-1,4,0],[-1,5,0]],
+        [[0,1,1],[-1,2,0],[-1,3,0],[3,4,2],[-1,5,0]],
+        [[2,1,1],[-1,2,0],[-1,3,0],[4,4,4],[3,5,5]],
+    ]
+    walls = [
+            [[[3, 1], [1, 0], [0, 0], [2, 0], [4, 0]],
+            [[4, 1], [3, 0], [1, 0], [0, 0], [2, 0]],
+            [[2, 1], [4, 0], [3, 0], [1, 0], [0, 0]],
+            [[0, 1], [2, 1], [4, 1], [3, 1], [1, 1]],
+            [[1, 1], [0, 0], [2, 0], [4, 0], [3, 0]]],
+            [[[3, 1], [1, 0], [0, 0], [2, 0], [4, 0]],
+            [[4, 1], [3, 0], [1, 1], [0, 0], [2, 0]],
+            [[2, 1], [4, 0], [3, 0], [1, 0], [0, 0]],
+            [[0, 1], [2, 1], [4, 1], [3, 1], [1, 1]],
+            [[1, 1], [0, 0], [2, 0], [4, 0], [3, 0]]],
+            [[[3, 1], [1, 0], [0, 0], [2, 0], [4, 0]],
+            [[4, 1], [3, 0], [1, 0], [0, 0], [2, 0]],
+            [[2, 1], [4, 0], [3, 0], [1, 0], [0, 0]],
+            [[0, 1], [2, 1], [4, 1], [3, 1], [1, 1]],
+            [[1, 1], [0, 1], [2, 1], [4, 0], [3, 0]]],
+            [[[3, 1], [1, 0], [0, 0], [2, 0], [4, 1]],
+            [[4, 1], [3, 0], [1, 0], [0, 0], [2, 1]],
+            [[2, 1], [4, 0], [3, 0], [1, 0], [0, 1]],
+            [[0, 1], [2, 1], [4, 1], [3, 1], [1, 1]],
+            [[1, 1], [0, 0], [2, 0], [4, 0], [3, 0]]]
+    ]
+    floor = [[0, -1, 2, 3, 4, -1, 3],
+             [3, 1, -1, -1, -1, -1, -1],
+             [5, -1, -1, -1, -1, -1, -1],
+             [2, -1, -1, -1, -1, -1, -1]]
+    azul_gui = AzulGUI(root, 4, pattern_lines, walls, floor)
     azul_gui.run()
