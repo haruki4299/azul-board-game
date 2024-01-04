@@ -68,6 +68,9 @@ class FactoryMiddle:
             return num_tiles, True
         else:
             return num_tiles, False
+    
+    def get_middle(self):
+        return self.tiles
                 
         
 # Represents a single factory display
@@ -103,6 +106,9 @@ class FactoryDisplay:
             self.tiles[i] = 0
             
         return num_tiles, unused_tiles
+    
+    def get_display(self):
+        return self.tiles
         
 # Represents all of the factory: includes factory display, middle area, and the bag of tiles
 class Factory:
@@ -190,3 +196,12 @@ class Factory:
             else:
                 print("First: ", tile, end=" ")
         print()
+        
+    def get_displays(self):
+        displays = []
+        for display in self.displays:
+            displays.append(display.get_display())
+            
+        middle = self.middle.get_middle()
+        
+        return displays, middle

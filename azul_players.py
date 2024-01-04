@@ -26,7 +26,6 @@ class HumanPlayer:
                 print("Invalid Input. Select Again.")
                 
         self.board.place_tile(row, type, number_of_tiles)
-        self.board.print_board()
         
     def wall_tiling(self) -> list[int]:
         # Move tiles from pattern line to the wall

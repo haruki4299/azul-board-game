@@ -142,6 +142,9 @@ class Wall:
         total_points += (h_lines * 2 + v_lines * 5)
         
         return total_points
+    
+    def get_wall(self):
+        return self.wall
 
 # Complete the pattern lines to move tiles to the wall for points
 class PatternLines:
@@ -190,6 +193,9 @@ class PatternLines:
     
     def reset_pattern_line(self) -> None:
         self.pattern_line = [[-1,1,0],[-1,2,0],[-1,3,0],[-1,4,0],[-1,5,0]]
+        
+    def get_pattern_line(self):
+        return self.pattern_line
 
     # Print the each of the pattern lines
     def print_pattern_line(self) -> None:
@@ -244,6 +250,9 @@ class FloorLine:
     def reset_floor(self) -> None:
         self.floor = [-1, -1, -1, -1, -1, -1, -1]
     
+    def get_floor(self):
+        return self.floor
+    
     # Print the floor line
     def print_floor(self) -> None:
         color = ["Red", "Orange", "Black", "Blue", "Light-Blue", "First"]
@@ -283,6 +292,9 @@ class Board:
         deductions = self.floor.calculate_floor_points()
         
         self.point_tally += (wall_points + deductions)
+        
+        if self.point_tally < 0:
+            self.point_tally = 0
     
     # Move Tiles for the Wall Tiling phase
     # Calculate points and reset board
@@ -307,6 +319,9 @@ class Board:
         self.point_tally += total_points
         
         self.point_tally += self.floor.calculate_floor_points()
+        
+        if self.point_tally < 0:
+            self.point_tally = 0
         
         self.pattern_line.reset_pattern_line()
         self.floor.reset_floor()
@@ -333,4 +348,3 @@ class Board:
         self.floor.print_floor()
         print("Points Total: ", self.point_tally, end="\n\n")
         
-    # Bug make sure invalid placement ends up in the floor
