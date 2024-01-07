@@ -222,7 +222,6 @@ class FloorLine:
         
     # Add a tile to the floor line (max 7)
     def add_to_floor(self, type: int) -> bool:
-        print(self.floor)
         if self.length == 7:
             # already full
             return False

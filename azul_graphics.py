@@ -11,7 +11,7 @@ class tile_display:
         center_y = (y1 + y2) / 2
 
         # Create text and associate it with the rectangle
-        self.text_id = self.canvas.create_text(center_x, center_y, text="", font=("Arial", 24), fill="white")
+        self.text_id = self.canvas.create_text(center_x, center_y, text="", font=("Arial", 24), fill="green")
 
     def update_text(self, new_text):
         if self.text_id:
@@ -79,6 +79,7 @@ class AzulGUI:
         self.player_pattern_line.append(pattern_line_squares)
                 
         # Draw Wall
+        wall_colors = ['blue', 'light blue', 'black', 'red', 'orange'] # list of colors for coloring the wall out lines
         wall_squares = []
         for i in range(5):
             for j in range(5):
@@ -87,7 +88,7 @@ class AzulGUI:
                 x2 = topLeftx + 300 + 47 + 50 * j
                 y2 = topLefty + 47 + 50 * i
 
-                tile = tile_display(self.canvas, x1, y1, x2, y2, "black")
+                tile = tile_display(self.canvas, x1, y1, x2, y2, wall_colors[(i-j)%5])
                 wall_squares.append(tile)
         self.player_wall.append(wall_squares)
 
@@ -207,7 +208,6 @@ class AzulGUI:
     
     def update_pattern_line(self, player_id, pattern_lines):
         colors = ["red", "orange", "black", "blue", "light blue", "white"]
-        
         # Update Pattern Lines
         num_tiles = pattern_lines[0][2]
         fill_color = pattern_lines[0][0]

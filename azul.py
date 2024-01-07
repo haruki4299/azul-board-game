@@ -2,6 +2,7 @@ from azul_players import HumanPlayer
 from azul_factory import Factory
 from azul_graphics import AzulGUI
 import tkinter as tk
+from time import sleep
 
 def main():
     print("Welcome to Azul.")
@@ -61,6 +62,8 @@ def main():
                 
             row = azul_gui.get_pattern_line_input(turn)
             player.place_tiles(color, num_tiles, row)
+            
+            
             pattern_line = player.board.pattern_line.get_pattern_line()
             azul_gui.update_pattern_line(turn, pattern_line)
             floor_line = player.board.floor.get_floor()
@@ -68,6 +71,7 @@ def main():
             
             # check if round ends
             if factory.check_end_round():
+                azul_gui.get_user_click()
                 break
             
             turn = (turn + 1) % nPlayers
@@ -95,12 +99,12 @@ def main():
             
         azul_gui.update_player_texts(turn, scores, nPlayers)
         
-    score = []
+    scores = []
     for i in range(nPlayers):
         player = players[i]
         player.board.calculate_points()
         scores.append(player.board.point_tally)
-        
+    
     azul_gui.update_player_texts(turn, scores, nPlayers)
         
     azul_gui.run()
