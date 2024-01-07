@@ -22,16 +22,19 @@ def main():
     azul_gui = AzulGUI(root, nPlayers)
     
     # Game Loop
-    while True:
+    game_end = False
+    turn = 0
+    next_first = 0
+    while not game_end:
+        turn = next_first
         # Reset Displays
         factory.fill_display()
         displays, middle = factory.get_displays()
         azul_gui.update_factory_displays(displays)
         azul_gui.update_factory_middle(middle)
         
-        turn = 0
+        
         while True:
-            turn = turn % nPlayers
             player = players[turn]
             
             # Player with turn gets red high light on text
@@ -39,7 +42,9 @@ def main():
             
             # Loop until valid input
             while True:
-                display, color = player.choose_tile(nPlayers)
+                # display, color = player.choose_tile(nPlayers)
+                display, tile_num = azul_gui.get_display_input()
+                color = factory.get_tile_color(display, tile_num)
                 num_tiles, first = factory.remove_tile(display, color)
                 if num_tiles != 0:
                     break
@@ -52,8 +57,10 @@ def main():
             
             if first:
                 player.board.floor.add_to_floor(5)
+                next_first = turn
                 
-            player.place_tiles(color, num_tiles)
+            row = azul_gui.get_pattern_line_input(turn)
+            player.place_tiles(color, num_tiles, row)
             pattern_line = player.board.pattern_line.get_pattern_line()
             azul_gui.update_pattern_line(turn, pattern_line)
             floor_line = player.board.floor.get_floor()
@@ -63,7 +70,7 @@ def main():
             if factory.check_end_round():
                 break
             
-            turn += 1
+            turn = (turn + 1) % nPlayers
         
         scores = []
         # Wall Tiling Phase
@@ -83,7 +90,20 @@ def main():
             
             scores.append(player.board.point_tally)
             
+            if player.board.check_end_game():
+                game_end = True
+            
         azul_gui.update_player_texts(turn, scores, nPlayers)
+        
+    score = []
+    for i in range(nPlayers):
+        player = players[i]
+        player.board.calculate_points()
+        scores.append(player.board.point_tally)
+        
+    azul_gui.update_player_texts(turn, scores, nPlayers)
+        
+    azul_gui.run()
 
 if __name__ == '__main__':
     main()

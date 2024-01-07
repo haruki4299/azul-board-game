@@ -289,8 +289,6 @@ class AzulGUI:
         while not clicked:
             self.root.update_idletasks()
             self.root.update()
-            
-        print(x,y)
 
         return x, y
     
@@ -316,102 +314,102 @@ class AzulGUI:
                     
             if 183 <= x <= 227:
                 if 353 <= y <= 397:
+                    return 0, 0
+                if 403 <= y <= 447:
+                    return 0, 1
+            if 233 <= x <= 277:
+                if 353 <= y <= 397:
+                    return 0, 2
+                if 403 <= y <= 447:
+                    return 0, 3
+                    
+            if 293 <= x <= 337:
+                if 353 <= y <= 397:
                     return 1, 0
                 if 403 <= y <= 447:
                     return 1, 1
-            if 233 <= x <= 277:
+            if 343 <= x <= 387:
                 if 353 <= y <= 397:
                     return 1, 2
                 if 403 <= y <= 447:
                     return 1, 3
                     
-            if 293 <= x <= 337:
+            if 403 <= x <= 447:
                 if 353 <= y <= 397:
                     return 2, 0
                 if 403 <= y <= 447:
                     return 2, 1
-            if 343 <= x <= 387:
+            if 453 <= x <= 497:
                 if 353 <= y <= 397:
                     return 2, 2
                 if 403 <= y <= 447:
                     return 2, 3
-                    
-            if 403 <= x <= 447:
+                
+            if 513 <= x <= 557:
                 if 353 <= y <= 397:
                     return 3, 0
                 if 403 <= y <= 447:
                     return 3, 1
-            if 453 <= x <= 497:
+            if 563 <= x <= 607:
                 if 353 <= y <= 397:
                     return 3, 2
                 if 403 <= y <= 447:
                     return 3, 3
-                
-            if 513 <= x <= 557:
+
+            if 623 <= x <= 667:
                 if 353 <= y <= 397:
                     return 4, 0
                 if 403 <= y <= 447:
                     return 4, 1
-            if 563 <= x <= 607:
+            if 673 <= x <= 717:
                 if 353 <= y <= 397:
                     return 4, 2
                 if 403 <= y <= 447:
                     return 4, 3
-
-            if 623 <= x <= 667:
+            
+            if 733 <= x <= 777 and self.nPlayers >= 3:
                 if 353 <= y <= 397:
                     return 5, 0
                 if 403 <= y <= 447:
                     return 5, 1
-            if 673 <= x <= 717:
+            if 783 <= x <= 827 and self.nPlayers >= 3:
                 if 353 <= y <= 397:
                     return 5, 2
                 if 403 <= y <= 447:
                     return 5, 3
             
-            if 733 <= x <= 777 and self.nPlayers >= 3:
+            if 843 <= x <= 887 and self.nPlayers >= 3:
                 if 353 <= y <= 397:
                     return 6, 0
                 if 403 <= y <= 447:
                     return 6, 1
-            if 783 <= x <= 827 and self.nPlayers >= 3:
+            if 893 <= x <= 937 and self.nPlayers >= 3:
                 if 353 <= y <= 397:
                     return 6, 2
                 if 403 <= y <= 447:
                     return 6, 3
             
-            if 843 <= x <= 887 and self.nPlayers >= 3:
+            if 953 <= x <= 997 and self.nPlayers >= 4:
                 if 353 <= y <= 397:
                     return 7, 0
                 if 403 <= y <= 447:
                     return 7, 1
-            if 893 <= x <= 937 and self.nPlayers >= 3:
+            if 997 <= x <= 1047 and self.nPlayers >= 4:
                 if 353 <= y <= 397:
                     return 7, 2
                 if 403 <= y <= 447:
                     return 7, 3
             
-            if 953 <= x <= 997 and self.nPlayers >= 4:
+            if 1063 <= x <= 1107 and self.nPlayers >= 4:
                 if 353 <= y <= 397:
                     return 8, 0
                 if 403 <= y <= 447:
                     return 8, 1
-            if 997 <= x <= 1047 and self.nPlayers >= 4:
+            if 1113 <= x <= 1157 and self.nPlayers >= 4:
                 if 353 <= y <= 397:
                     return 8, 2
                 if 403 <= y <= 447:
                     return 8, 3
-            
-            if 1063 <= x <= 1107 and self.nPlayers >= 4:
-                if 353 <= y <= 397:
-                    return 9, 0
-                if 403 <= y <= 447:
-                    return 9, 1
-            if 1113 <= x <= 1157 and self.nPlayers >= 4:
-                if 353 <= y <= 397:
-                    return 9, 2
-                if 403 <= y <= 447:
-                    return 9, 3
 
     def get_pattern_line_input(self, turn):
         # Draw Pattern Line
@@ -430,7 +428,6 @@ class AzulGUI:
         
         while True:
             x, y = self.get_user_click()
-            print(x,y)
             
             if topLeftx <= x <= topLeftx + 270 and topLefty + 3 <= y <= topLefty + 47:
                 return 0

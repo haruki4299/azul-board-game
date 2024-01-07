@@ -135,6 +135,19 @@ class Factory:
             for i in range(self.numDisplays):
                 display = FactoryDisplay()
                 self.displays.append(display)
+                
+    def get_tile_color(self, display_num, tile_num):
+        if display_num == -1:
+            return tile_num
+        else:
+            display = self.displays[display_num]
+            for i in range(5):
+                tile_num -= display.tiles[i]
+                if tile_num < 0:
+                    return i
+        # error: should return before this
+        return -1
+            
         
     # Fill display with 4 tiles each from the bag
     def fill_display(self) -> None:

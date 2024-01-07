@@ -222,6 +222,7 @@ class FloorLine:
         
     # Add a tile to the floor line (max 7)
     def add_to_floor(self, type: int) -> bool:
+        print(self.floor)
         if self.length == 7:
             # already full
             return False
@@ -249,6 +250,7 @@ class FloorLine:
     
     def reset_floor(self) -> None:
         self.floor = [-1, -1, -1, -1, -1, -1, -1]
+        self.length = 0
     
     def get_floor(self):
         return self.floor
