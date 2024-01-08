@@ -1,3 +1,10 @@
+# Get paths for folders
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+module_folder = os.path.join(current_dir, "classes")
+sys.path.insert(0, module_folder)
+
 from azul_players import HumanPlayer
 from azul_factory import Factory
 from azul_graphics import AzulGUI
