@@ -68,7 +68,8 @@ def main():
                 next_first = turn
                 
             row = azul_gui.get_pattern_line_input(turn)
-            player.place_tiles(color, num_tiles, row)
+            left_over = player.place_tiles(color, num_tiles, row)
+            factory.update_reserve_tiles(left_over)
             
             
             pattern_line = player.board.pattern_line.get_pattern_line()

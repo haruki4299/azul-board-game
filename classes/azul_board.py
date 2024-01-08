@@ -273,7 +273,7 @@ class Board:
         
         self.point_tally = 0
         
-    def place_tile(self, row: int, type: int, number_of_tiles: int) -> None:
+    def place_tile(self, row: int, type: int, number_of_tiles: int) -> list[int]:
         # First check if placing the tile there is a valid move
         if self.pattern_line.check_valid_move(type, row) and self.wall.check_valid_move(type, row):
             overflow_tiles = self.pattern_line.add_tiles(row, type, number_of_tiles)
@@ -282,9 +282,13 @@ class Board:
             overflow_tiles = number_of_tiles
             
         # Add any overflow tiles to the floor line
+        left_over = [0, 0, 0, 0, 0]
         for i in range(overflow_tiles):
             suc = self.floor.add_to_floor(type)
-            print("Adding to Floor ", suc) # Later do something to keep track of tiles if we were not able to add to floor -> goes in box irl
+            if not suc:
+                left_over[type] += 1
+                
+        return left_over
       
     # Calculate Extra Points at the End of the game
     # Find horizontal (2 points), vertical (5 points), and all of one type (10 points) 
