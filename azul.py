@@ -108,12 +108,19 @@ def main():
         azul_gui.update_player_texts(turn, scores, nPlayers)
         
     scores = []
+    max_score = 0
+    max_index = 0
     for i in range(nPlayers):
         player = players[i]
         player.board.calculate_points()
         scores.append(player.board.point_tally)
+        if player.board.point_tally >= max_score:
+            max_index = i
+            max_score = player.board.point_tally
     
-    azul_gui.update_player_texts(turn, scores, nPlayers)
+    azul_gui.update_player_texts(max_index, scores, nPlayers)
+    
+    azul_gui.update_title("Game End")
         
     azul_gui.run()
 

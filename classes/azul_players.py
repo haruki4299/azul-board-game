@@ -17,8 +17,8 @@ class HumanPlayer:
 
         return display, color
     
-    def place_tiles(self, type: int, number_of_tiles: int, row: int) -> None:
-        self.board.place_tile(row, type, number_of_tiles)
+    def place_tiles(self, type: int, number_of_tiles: int, row: int) -> list[int]:
+        return self.board.place_tile(row, type, number_of_tiles)
         
     def wall_tiling(self) -> list[int]:
         # Move tiles from pattern line to the wall

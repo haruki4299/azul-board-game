@@ -268,6 +268,9 @@ class AzulGUI:
             else:
                 self.canvas.itemconfig(text_id, text=f"Player {i+1}: {point} points", fill="white")
                 
+    def update_title(self, text):
+        self.root.title(text)
+
     def get_user_click(self):
         """
         Waits for a user click on the screen and returns the coordinates.
