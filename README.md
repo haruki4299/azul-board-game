@@ -73,3 +73,7 @@ A new round begins with the central factory display being refilled with tiles.
 #### End of the Game:
 
 The game ends on the round in which any one player has filled a horizontal line on their wall. Once all players have calulated their points from the wall tiling phase, players get bonus points for each horizontal line filled on the wall (+2 points), vertical line filled on the wall (+7 points), and completing all five of one color on the wall (+10 points). The player with the highest score at the end of the final round wins.
+
+## Future Extensions
+
+- Computer Player. Using an alpha beta pruning / mini max algorithm, create a computer player that chooses the optimal move.
